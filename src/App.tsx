@@ -22,14 +22,16 @@ function App() {
   };
 
   usb.addEventListener("connect", async (event: any) => {
-    // const { vendorId, productId } = await usb.getDevices();
-    const device = await usb.getDevices();
-    console.log("vendorId", device.vendorId);
-    console.log("productId", device.productId);
-    const res = await usb.requestDevice({
-      filters: [device.vendorId, device.productId],
+    const devices = await usb.getDevices();
+    devices.forEach(async (device: any) => {
+      console.log("vendorId", `${device.productName} is ${device.vendorId}`);
+      console.log("productId", `${device.productName} is ${device.productId}`);
+      // アクションがあればトレそう
+      const res = await usb.requestDevice({
+        filters: [{ vendorId: device.vendorId, productId: device.productId }],
+      });
+      console.log(res);
     });
-    console.log(res);
   });
 
   async function handleUSBAccess() {
@@ -38,8 +40,7 @@ function App() {
       const res = await usb.requestDevice({
         filters: [device.vendorId, device.productId],
       });
-      console.log("vendorId", device.vendorId);
-      console.log("productId", device.productId);
+
       console.log(res);
       console.log("res vendorId", res.vendorId);
       console.log("res productId", res.productId);
