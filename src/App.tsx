@@ -41,6 +41,8 @@ function App() {
       console.log("vendorId", device.vendorId);
       console.log("productId", device.productId);
       console.log(res);
+      console.log("res vendorId", res.vendorId);
+      console.log("res productId", res.productId);
     } catch (err) {
       alert(err);
     }
