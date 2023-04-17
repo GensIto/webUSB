@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import "./App.css";
 import { SelectStartDir } from "./components/SelectStartDir";
 import { RequestUSB } from "./components/RequestUSB";
@@ -8,6 +8,13 @@ import { SelectFile } from "./components/SelectFile";
 import { SelectDirectory } from "./components/SelectDirectory";
 import { PushIndexedDB } from "./components/PushIndexedDB";
 import { Divider } from "./components/Divider";
+
+declare module "react" {
+  interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+    directory?: boolean;
+    webkitdirectory?: boolean;
+  }
+}
 
 const App: React.FC = () => {
   return (
@@ -31,6 +38,8 @@ const App: React.FC = () => {
       <Divider />
       {/*  */}
       <PushIndexedDB />
+      <Divider />
+      {/*  */}
     </div>
   );
 };
