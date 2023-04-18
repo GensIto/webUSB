@@ -8,6 +8,8 @@ type Image = {
 
 export const PushIndexedDB = () => {
   const [imageUrls, setImageUrls] = useState<Image[]>();
+  const [inputValue, setInputValue] = useState("examination1");
+
   const pushIndexedDatabase = async () => {
     // Indexed Database から FileSystemDirectoryHandle オブジェクトを取得
     let dh = await get("dir");
@@ -29,17 +31,14 @@ export const PushIndexedDB = () => {
       dh = await (window as any).showDirectoryPicker();
     }
 
-    // ファイルとディレクトリの一覧
-    // for await (const handle of dh.values()) {
-    //   if (handle.kind === "file") {
-    //     console.log(handle.name);
-    //   } else if (handle.kind === "directory") {
-    //     console.log(handle.name + "/");
-    //   }
-    // }
+    // 画像URL作成
     const files: { name: string; url: string }[] = [];
     async function readFilesFromDirectory(directoryHandle: any) {
+      console.log("directoryHandle.values()", directoryHandle.values());
       for await (const entry of directoryHandle.values()) {
+        console.log("entry", entry);
+        console.log("entry.kind", entry.kind);
+        console.log("entry.name", entry.name);
         if (
           entry.kind === "file" &&
           entry.name.match(/\.(jpg|jpeg|png|gif)$/)
@@ -50,7 +49,7 @@ export const PushIndexedDB = () => {
             name: entry.name,
             url: url,
           });
-        } else if (entry.kind === "directory") {
+        } else if (entry.kind === "directory" && entry.name === inputValue) {
           await readFilesFromDirectory(entry);
         }
       }
@@ -66,9 +65,14 @@ export const PushIndexedDB = () => {
 
   return (
     <div>
+      <input
+        type='text'
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
       <button onClick={pushIndexedDatabase}>Push Indexed Database</button>
       <p>↑キャッシュクリアで削除される</p>
-      {imageUrls?.map((v: any, i: number) => (
+      {imageUrls?.map((v: Image, i: number) => (
         <div>
           <img key={i} src={v.url} alt={`Image ${v.name}`} />
         </div>
