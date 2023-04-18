@@ -35,8 +35,13 @@ const ImageGallery: React.FC = () => {
         {files
           .filter((file: any) => file.name.startsWith("00000001_"))
           .map((file: any, index: any) => (
-            <li key={index}>
-              <img src={URL.createObjectURL(file)} alt='咽頭画像' />
+            <li key={index} style={{ width: "300px" }}>
+              <p>{`${file.name}${index + 1}番目`}</p>
+              <img
+                style={{ width: "300px" }}
+                src={URL.createObjectURL(file)}
+                alt='咽頭画像'
+              />
             </li>
           ))}
       </ul>
