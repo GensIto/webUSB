@@ -1,76 +1,74 @@
 import { useState } from "react";
 
-interface Image {
-  src: string;
+interface ImageFile extends File {
+  url: string;
 }
 
 const ImageGallery: React.FC = () => {
-  const [files, setFiles] = useState<any>([]);
+  const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
 
-  const handleDirInputChange = (e: any) => {
-    const fileList = Array.from(e.target.files);
-    console.log(fileList);
-    setFiles(fileList);
+  const handleDirectoryInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const fileList = Array.from(e.target.files!).filter((file) =>
+      file.name.startsWith("00000001_")
+    );
+    setImageFiles(
+      fileList.map((file) =>
+        Object.assign(file, { url: URL.createObjectURL(file) })
+      )
+    );
   };
 
-  const handleButtonClick = () => {
-    document.getElementById("InputFiles")!.click();
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // FormDataオブジェクトを作成
     const formData = new FormData();
+    imageFiles.forEach((file) => {
+      formData.append("images", file);
+    });
 
-    // 配列に格納されたBlob画像を追加
-    files
-      .filter((file: any) => file.name.startsWith("00000001_"))
-      .forEach((file: any) => {
-        formData.append("images", file, file.name);
-      });
-    for (const entry of formData.entries()) {
+    for (let entry of formData.entries()) {
       console.log(entry);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
-        <div style={{ textAlign: "center" }}>
-          <button onClick={handleButtonClick}>
-            送信する(foldersを選択して下さい)
-            <input
-              id='InputFiles'
-              type='file'
-              webkitdirectory=''
-              style={{ display: "none" }}
-              onChange={handleDirInputChange}
-            />
-          </button>
-        </div>
+      <div style={{ textAlign: "center" }}>
+        <button
+          type='button'
+          onClick={() => document.getElementById("InputFiles")!.click()}>
+          Choose folder(s)
+        </button>
+        <input
+          id='InputFiles'
+          type='file'
+          webkitdirectory=''
+          style={{ display: "none" }}
+          onChange={handleDirectoryInputChange}
+          multiple
+        />
+      </div>
+      {imageFiles.length > 0 && (
         <ul>
-          {files
-            .filter((file: any) => file.name.startsWith("00000001_"))
-            .sort((fileA: any, fileB: any) => {
-              // 00000001_[001].jpgで比較
-              const aNum = parseInt(fileA.name.slice(9, 12));
-              const bNum = parseInt(fileB.name.slice(9, 12));
-              return aNum - bNum;
-            })
-            .map((file: any, index: any) => (
+          {imageFiles
+            .sort(
+              (fileA, fileB) =>
+                parseInt(fileA.name.slice(9, 12)) -
+                parseInt(fileB.name.slice(9, 12))
+            )
+            .map((file, index) => (
               <li key={index} style={{ width: "300px" }}>
                 <p>{`${file.name} = ${index + 1}番目`}</p>
-                <img
-                  style={{ width: "300px" }}
-                  src={URL.createObjectURL(file)}
-                  alt='咽頭画像'
-                />
+                <img style={{ width: "300px" }} src={file.url} alt='咽頭画像' />
               </li>
             ))}
         </ul>
-        <button type='submit'>送信</button>
-      </div>
+      )}
+      <button type='submit' disabled={imageFiles.length === 0}>
+        Submit
+      </button>
     </form>
   );
 };
