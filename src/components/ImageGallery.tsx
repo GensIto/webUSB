@@ -5,43 +5,41 @@ interface Image {
 }
 
 const ImageGallery: React.FC = () => {
-  const [images, setImages] = useState<Image[]>([]);
+  const [files, setFiles] = useState<any>([]);
 
-  const handleFolderSelect = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const selectedFolder = event.target.files?.[0];
-    if (!selectedFolder) return;
+  const handleDirInputChange = (e: any) => {
+    const fileList = Array.from(e.target.files);
+    console.log(fileList);
+    setFiles(fileList);
+  };
 
-    const files = selectedFolder.webkitRelativePath.split("/");
-    const filePromises: Promise<string>[] = [];
-
-    for (const file of files) {
-      if (/\.(jpe?g|png|gif)$/i.test(file)) {
-        const fileBlob = new File([file], file);
-        filePromises.push(
-          new Promise((resolve) => resolve(URL.createObjectURL(fileBlob)))
-        );
-      }
-    }
-
-    Promise.all(filePromises).then((urls: string[]) => {
-      const imageObjects = urls.map((url: string) => ({ src: url }));
-      setImages(imageObjects);
-    });
+  const handleButtonClick = () => {
+    document.getElementById("InputFiles")!.click();
   };
 
   return (
     <div>
-      <input
-        type='file'
-        onChange={handleFolderSelect}
-        webkitdirectory=''
-        directory=''
-      />
-      {images.map((image) => (
-        <img key={image.src} src={image.src} />
-      ))}
+      <div style={{ textAlign: "center" }}>
+        <button onClick={handleButtonClick}>
+          送信する(foldersを選択して下さい)
+          <input
+            id='InputFiles'
+            type='file'
+            webkitdirectory=''
+            style={{ display: "none" }}
+            onChange={handleDirInputChange}
+          />
+        </button>
+      </div>
+      <ul>
+        {files
+          .filter((file: any) => file.name.startsWith("00000001_"))
+          .map((file: any, index: any) => (
+            <li key={index}>
+              <img src={URL.createObjectURL(file)} alt='咽頭画像' />
+            </li>
+          ))}
+      </ul>
     </div>
   );
 };
