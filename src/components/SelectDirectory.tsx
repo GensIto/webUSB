@@ -28,6 +28,7 @@ export const SelectDirectory = () => {
     await readFilesFromDirectory(dirHandle);
     setDirectory(files);
   }
+
   return (
     <div>
       <button onClick={selectDirectory}>Get Directory</button>

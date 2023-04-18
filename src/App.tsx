@@ -8,11 +8,12 @@ import { SelectFile } from "./components/SelectFile";
 import { SelectDirectory } from "./components/SelectDirectory";
 import { PushIndexedDB } from "./components/PushIndexedDB";
 import { Divider } from "./components/Divider";
+import ImageGallery from "./components/ImageGallery";
 
 declare module "react" {
   interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
-    directory?: boolean;
-    webkitdirectory?: boolean;
+    directory?: boolean | string;
+    webkitdirectory?: boolean | string;
   }
 }
 
@@ -40,6 +41,8 @@ const App: React.FC = () => {
       <PushIndexedDB />
       <Divider />
       {/*  */}
+      <ImageGallery />
+      <Divider />
     </div>
   );
 };
