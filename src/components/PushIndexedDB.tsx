@@ -74,7 +74,13 @@ export const PushIndexedDB = () => {
       <p>↑キャッシュクリアで削除される</p>
       {imageUrls?.map((v: Image, i: number) => (
         <div>
-          <img key={i} src={v.url} alt={`Image ${v.name}`} />
+          <p>{`${v.name} = ${i + 1}番目`}</p>
+          <img
+            style={{ width: "300px" }}
+            key={i}
+            src={v.url}
+            alt={`Image ${v.name}`}
+          />
         </div>
       ))}
     </div>

@@ -20,8 +20,8 @@ declare module "react" {
 const App: React.FC = () => {
   return (
     <div>
-      <PushIndexedDB />
-      <Divider />
+      {/* <PushIndexedDB />
+      <Divider /> */}
       {/*  */}
       <ImageGallery />
       <Divider />
