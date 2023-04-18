@@ -20,24 +20,6 @@ declare module "react" {
 const App: React.FC = () => {
   return (
     <div>
-      <RequestUSB />
-      <Divider />
-      {/*  */}
-      <GetUSB />
-      <Divider />
-      {/*  */}
-      <AccessUSBDevice />
-      <Divider />
-      {/*  */}
-      <SelectFile />
-      <Divider />
-      {/*  */}
-      <SelectStartDir />
-      <Divider />
-      {/*  */}
-      <SelectDirectory />
-      <Divider />
-      {/*  */}
       <PushIndexedDB />
       <Divider />
       {/*  */}
