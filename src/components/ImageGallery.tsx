@@ -20,7 +20,18 @@ const ImageGallery: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(files.filter((file: any) => file.name.startsWith("00000001_")));
+    // FormDataオブジェクトを作成
+    const formData = new FormData();
+
+    // 配列に格納されたBlob画像を追加
+    files
+      .filter((file: any) => file.name.startsWith("00000001_"))
+      .forEach((file: any) => {
+        formData.append("images", file, file.name);
+      });
+    for (const entry of formData.entries()) {
+      console.log(entry);
+    }
   };
 
   return (
