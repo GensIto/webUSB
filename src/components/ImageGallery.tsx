@@ -28,6 +28,15 @@ const ImageGallery: React.FC = () => {
       images: imageFiles,
     };
 
+    // FormDataオブジェクトを作成
+    // const formData = new FormData();
+    // imageFiles.forEach((file) => {
+    //   formData.append("images", file);
+    // });
+    // for (const entry of imageFiles.entries()) {
+    //   console.log(entry);
+    // }
+
     try {
       const response = await fetch("http://localhost:3005/", {
         method: "POST",
