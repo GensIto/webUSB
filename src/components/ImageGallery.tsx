@@ -10,9 +10,10 @@ const ImageGallery: React.FC = () => {
   const handleDirectoryInputChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const fileList = Array.from(e.target.files!).filter((file) =>
-      file.name.startsWith("00000001_")
-    );
+    // const fileList = Array.from(e.target.files!).filter((file) =>
+    //   file.name.startsWith("00000001_")
+    // );
+    const fileList = Array.from(e.target.files!);
     setImageFiles(
       fileList.map((file) =>
         Object.assign(file, { url: URL.createObjectURL(file) })
@@ -23,14 +24,37 @@ const ImageGallery: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    imageFiles.forEach((file) => {
-      formData.append("images", file);
-    });
+    const jsonData = {
+      images: imageFiles,
+    };
 
-    for (let entry of formData.entries()) {
-      console.log(entry);
+    try {
+      const response = await fetch("http://localhost:3005/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(jsonData),
+      });
+      const data = await response.json();
+      console.log("data", data);
+    } catch (error: any) {
+      console.error(error.message);
     }
+  };
+
+  const [data, setData] = useState([]);
+
+  const handleClick = () => {
+    fetch("http://localhost:3005")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setData(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -69,6 +93,14 @@ const ImageGallery: React.FC = () => {
       <button type='submit' disabled={imageFiles.length === 0}>
         Submit
       </button>
+      <button onClick={handleClick}>データを取得する</button>
+      <ul>
+        {data.map((item: any) => (
+          <li key={item.id}>
+            <img style={{ width: "300px" }} src={item.url} alt='咽頭画像' />
+          </li>
+        ))}
+      </ul>
     </form>
   );
 };
