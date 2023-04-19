@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseInterceptors } from '@nestjs/common';
 import { CreateDto } from './dto/create.dto';
 import { PrismaService } from './prisma/prisma.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Injectable()
+@UseInterceptors(FileInterceptor('image'))
 export class AppService {
   constructor(private readonly prisma: PrismaService) {}
 
